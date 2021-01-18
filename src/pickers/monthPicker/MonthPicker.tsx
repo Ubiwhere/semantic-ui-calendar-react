@@ -12,6 +12,7 @@ import {
   DisableValuesProps,
   EnableValuesProps,
   MinMaxValueProps,
+  MonthPickerOptionalProps,
   OptionalHeaderProps,
   ProvideHeadingValue,
   SingleSelectionPicker,
@@ -27,12 +28,14 @@ import {
   isNextPageAvailable,
   isPrevPageAvailable,
 } from './sharedFunctions';
+import { invoke } from 'lodash';
 
 type MonthPickerProps = BasePickerProps
   & DisableValuesProps
   & EnableValuesProps
   & MinMaxValueProps
-  & OptionalHeaderProps;
+  & OptionalHeaderProps
+  & MonthPickerOptionalProps;
 
 export interface MonthPickerOnChangeData extends BasePickerOnChangeData {
   value: {
@@ -69,6 +72,8 @@ class MonthPicker
       minDate,
       maxDate,
       localization,
+      onMonthChange,
+      onYearChange,
       ...rest
     } = this.props;
 
@@ -166,6 +171,11 @@ class MonthPicker
         month: this.buildCalendarValues().indexOf(value),
       },
     };
+
+    if (this.props.onMonthChange) {
+      this.props.onMonthChange(e, data);
+    }
+
     this.props.onChange(e, data);
   }
 
@@ -175,6 +185,20 @@ class MonthPicker
     this.setState(({ date }) => {
       const nextDate = date.clone();
       nextDate.add(1, 'year');
+
+      if (this.props.onYearChange) {
+
+        const resData: MonthPickerOnChangeData = {
+          ...this.props,
+          value: {
+            year: nextDate.year(),
+            month: nextDate.day(),
+          },
+        };
+
+        this.props.onYearChange(e, resData);
+
+      }
 
       return { date: nextDate };
     }, callback);
@@ -186,6 +210,20 @@ class MonthPicker
     this.setState(({ date }) => {
       const prevDate = date.clone();
       prevDate.subtract(1, 'year');
+
+      if (this.props.onYearChange) {
+
+        const resData: MonthPickerOnChangeData = {
+          ...this.props,
+          value: {
+            year: prevDate.year(),
+            month: prevDate.day(),
+          },
+        };
+
+        this.props.onYearChange(e, resData);
+
+      }
 
       return { date: prevDate };
     }, callback);

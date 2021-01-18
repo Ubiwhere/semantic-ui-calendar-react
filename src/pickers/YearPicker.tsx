@@ -19,6 +19,7 @@ import {
   EnableValuesProps,
   MinMaxValueProps,
   SingleSelectionPicker,
+  YearPickerOptionalProps,
 } from './BasePicker';
 
 const PAGE_WIDTH = 3;
@@ -28,7 +29,8 @@ const YEARS_ON_PAGE = PAGE_WIDTH * PAGE_HEIGHT;
 type YearPickerProps = BasePickerProps
   & DisableValuesProps
   & EnableValuesProps
-  & MinMaxValueProps;
+  & MinMaxValueProps
+  & YearPickerOptionalProps;
 
 export interface YearPickerOnChangeData extends BasePickerOnChangeData {
   value: {
@@ -62,6 +64,7 @@ class YearPicker extends SingleSelectionPicker<YearPickerProps> {
       minDate,
       maxDate,
       localization,
+      onYearChange,
       ...rest
     } = this.props;
 
@@ -215,6 +218,13 @@ class YearPicker extends SingleSelectionPicker<YearPickerProps> {
       ...this.props,
       value: { year: parseInt(value, 10) },
     };
+
+    if (this.props.onYearChange) {
+
+      this.props.onYearChange(e, data);
+
+    }
+
     this.props.onChange(e, data);
   }
 
@@ -224,6 +234,17 @@ class YearPicker extends SingleSelectionPicker<YearPickerProps> {
     this.setState(({ date }) => {
       const nextDate = date.clone();
       nextDate.add(YEARS_ON_PAGE, 'year');
+
+      if (this.props.onYearChange) {
+
+        const resData: YearPickerOnChangeData = {
+          ...this.props,
+          value: { year: nextDate.year() },
+        };
+
+        this.props.onYearChange(e, resData);
+
+      }
 
       return { date: nextDate };
     }, callback);
@@ -235,6 +256,17 @@ class YearPicker extends SingleSelectionPicker<YearPickerProps> {
     this.setState(({ date }) => {
       const prevDate = date.clone();
       prevDate.subtract(YEARS_ON_PAGE, 'year');
+
+      if (this.props.onYearChange) {
+
+        const resData: YearPickerOnChangeData = {
+          ...this.props,
+          value: { year: prevDate.year() },
+        };
+
+        this.props.onYearChange(e, resData);
+
+      }
 
       return { date: prevDate };
     }, callback);

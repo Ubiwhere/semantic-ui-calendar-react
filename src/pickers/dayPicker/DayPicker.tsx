@@ -17,6 +17,7 @@ import {
   MarkedValuesProps,
   ProvideHeadingValue,
   SingleSelectionPicker,
+  DayPickerOptionalProps,
 } from '../BasePicker';
 import {
   buildDays,
@@ -42,7 +43,8 @@ type DayPickerProps = BasePickerProps
   & DisableValuesProps
   & EnableValuesProps
   & MinMaxValueProps
-  & MarkedValuesProps;
+  & MarkedValuesProps
+  & DayPickerOptionalProps;
 
 class DayPicker
   extends SingleSelectionPicker<DayPickerProps>
@@ -69,6 +71,7 @@ class DayPicker
       marked,
       markColor,
       localization,
+      onMonthChange,
       ...rest
     } = this.props;
 
@@ -203,6 +206,10 @@ class DayPicker
       },
     };
 
+    if (this.props.onMonthChange) {
+      this.props.onMonthChange(e, data);
+    }
+
     this.props.onChange(e, data);
   }
 
@@ -212,6 +219,21 @@ class DayPicker
     this.setState(({ date }) => {
       const nextDate = date.clone();
       nextDate.add(1, 'month');
+
+      if (this.props.onMonthChange) {
+
+        const resData: DayPickerOnChangeData = {
+          ...this.props,
+          value: {
+            year: nextDate.year(),
+            month: nextDate.month(),
+            date: nextDate.day() || 1,
+          },
+        };
+
+        this.props.onMonthChange(e, resData);
+
+      }
 
       return { date: nextDate };
     }, callback);
@@ -223,6 +245,21 @@ class DayPicker
     this.setState(({ date }) => {
       const prevDate = date.clone();
       prevDate.subtract(1, 'month');
+
+      if (this.props.onMonthChange) {
+
+        const resData: DayPickerOnChangeData = {
+          ...this.props,
+          value: {
+            year: prevDate.year(),
+            month: prevDate.month(),
+            date: prevDate.day() || 1,
+          },
+        };
+
+        this.props.onMonthChange(e, resData);
+
+      }
 
       return { date: prevDate };
     }, callback);

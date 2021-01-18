@@ -157,6 +157,8 @@ class DateInput extends BaseInput<DateInputProps, DateInputState> {
       marked,
       localization,
       onChange,
+      onMonthChange,
+      onYearChange,
       ...rest
     } = this.props;
 
@@ -234,6 +236,7 @@ class DateInput extends BaseInput<DateInputProps, DateInputState> {
       return (
         <YearPicker
           {...pickerProps}
+          onYearChange={this.onPopupYearChange}
           disable={getDisabledYears(disableParsed)}
         />
       );
@@ -243,12 +246,20 @@ class DateInput extends BaseInput<DateInputProps, DateInputState> {
         <MonthPicker
           {...pickerProps}
           hasHeader
+          onYearChange={this.onPopupYearChange}
+          onMonthChange={this.onPopupMonthChange}
           disable={getDisabledMonths(disableParsed)}
         />
       );
     }
 
-    return <DayPicker {...pickerProps} disable={disableParsed} marked={markedParsed} markColor={markColor} />;
+    return <DayPicker
+            {...pickerProps}
+            disable={disableParsed}
+            marked={markedParsed}
+            markColor={markColor}
+            onMonthChange={this.onPopupMonthChange}
+            />;
   }
 
   private switchToNextModeUndelayed = (): void => {
@@ -278,6 +289,7 @@ class DateInput extends BaseInput<DateInputProps, DateInputState> {
   }
 
   private handleSelect = (e, { value }: BasePickerOnChangeData) => {
+
     if (this.state.mode === 'day' && this.props.closable) {
       this.closePopup();
     }
@@ -287,6 +299,7 @@ class DateInput extends BaseInput<DateInputProps, DateInputState> {
       } = prevState;
       if (mode === 'day') {
         const outValue = moment(value).format(this.props.dateFormat);
+
         invoke(this.props, 'onChange', e, { ...this.props, value: outValue });
       }
 
@@ -308,7 +321,20 @@ class DateInput extends BaseInput<DateInputProps, DateInputState> {
         date: parsedValue.date(),
       });
     }
+
     invoke(this.props, 'onChange', e, { ...this.props, value });
+  }
+
+  private onPopupMonthChange = (e, { value }) => {
+    const outValue = moment(value).format(this.props.dateFormat);
+
+    invoke(this.props, 'onMonthChange', e, { ...this.props, value: outValue });
+  }
+
+  private onPopupYearChange = (e, { value }) => {
+    const outValue = moment(value).format(this.props.dateFormat);
+
+    invoke(this.props, 'onYearChange', e, { ...this.props, value: outValue });
   }
 }
 

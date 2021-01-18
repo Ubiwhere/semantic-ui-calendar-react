@@ -108,7 +108,9 @@ class DateTimeForm extends React.Component<any, any> {
           iconPosition='left'
           preserveViewMode={false}
           autoComplete='off'
-          onChange={this.handleChange}
+          onMonthChange={(event: React.SyntheticEvent, { name, value }: DateTimeFormHandleChangeData) => console.log(value)}
+          onYearChange={(event: React.SyntheticEvent, { name, value }: DateTimeFormHandleChangeData) => console.log(value)}
+          onChange={(event: React.SyntheticEvent, { name, value }: DateTimeFormHandleChangeData) => console.log(value)}
         />
         <br />
         <DateInput

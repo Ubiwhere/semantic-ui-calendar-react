@@ -66,6 +66,19 @@ export interface OptionalHeaderProps {
   hasHeader: boolean;
 }
 
+export interface YearPickerOptionalProps {
+  onYearChange?: (e: React.SyntheticEvent<HTMLElement>, data: BasePickerOnChangeData) => void;
+}
+
+export interface MonthPickerOptionalProps {
+  onMonthChange?: (e: React.SyntheticEvent<HTMLElement>, data: BasePickerOnChangeData) => void;
+  onYearChange?: (e: React.SyntheticEvent<HTMLElement>, data: BasePickerOnChangeData) => void;
+}
+
+export interface DayPickerOptionalProps {
+  onMonthChange?: (e: React.SyntheticEvent<HTMLElement>, data: BasePickerOnChangeData) => void;
+}
+
 export interface DisableValuesProps {
   /** Array of disabled dates. */
   disable?: Moment[];

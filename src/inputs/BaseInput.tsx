@@ -162,6 +162,9 @@ export const DateRelatedPropTypes = {
     CustomPropTypes.dateObject,
     CustomPropTypes.momentObj,
   ]),
+
+  onMonthChange: PropTypes.func,
+  onYearChange: PropTypes.func,
 };
 
 export interface TimeRelatedProps {
